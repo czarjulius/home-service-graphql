@@ -1,0 +1,16 @@
+{
+  "services": [
+    {
+      "id": "21",
+      "title": "Shallow maker",
+      "imageUrl": "https://static.thenounproject.com/png/2909378-200.png",
+      "description": "Sed ut perspiciatis qui modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem"
+    },
+    {
+      "id": "31",
+      "title": "Ever Green",
+      "imageUrl": "https://static.thenounproject.com/png/2909378-200.png",
+      "description": "Sed ut perspiciatis qui modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem"
+    }
+  ]
+}
