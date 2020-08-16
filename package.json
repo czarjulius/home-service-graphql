@@ -21,11 +21,14 @@
   "homepage": "https://github.com/czarjulius/home-service-graphql#readme",
   "dependencies": {
     "axios": "^0.19.2",
+    "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "express-graphql": "^0.11.0",
     "graphql": "^15.3.0",
     "json-server": "^0.16.1",
-    "lodash": "^4.17.19"
+    "lodash": "^4.17.19",
+    "mongodb": "^3.6.0",
+    "mongoose": "^5.10.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.4"
