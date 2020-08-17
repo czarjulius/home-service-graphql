@@ -1,29 +1,54 @@
-const express = require("express");
-// const {graphqlHTTP} = require("express-graphql")
-// const mongoConnect = require("./util/database");
-const bodyParser = require("body-parser");
-const mongoose = require("mongoose");
+import express from "express";
+import { graphqlHTTP } from "express-graphql";
+import bodyParser from "body-parser";
+import "dotenv/config";
+
+import { connect } from "./models/db";
+import graphqlSchema from "./graphql/schema";
+import graphqlResolver from "./graphql/resolvers";
 
 const app = express();
-app.use(bodyParser.urlencoded({ extended: false }));
-// app.use('/graphql', graphqlHTTP({
-//   schema,
-//   graphiql: true
-// }));
+app.use(bodyParser.json());
 
-// app.listen(4000, () => {
-//   console.log("Listening");
-// });
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "OPTIONS, GET, POST, PUT, PATCH, DELETE"
+  );
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  if (req.method === "OPTIONS") {
+    return res.statusCode(200);
+  }
+  next();
+});
 
-// mongoConnect(() => {
-//   app.listen(4000);
-// });
-
-mongoose
-  .connect(
-    "mongodb+srv://julius:julius@cluster0.4pjb6.mongodb.net/home_service?retryWrites=true&w=majority"
-  )
-  .then((result) => {
-    app.listen(4000);
+app.use(
+  "/graphql",
+  graphqlHTTP({
+    schema: graphqlSchema,
+    rootValue: graphqlResolver,
+    graphiql: true,
+    formatError(err) {
+      if (!err.originalError) {
+        return err;
+      }
+      const data = err.originalError.data;
+      const message = err.message || "An error occurred.";
+      const code = err.originalError.code || 500;
+      return { message: message, status: code, data: data };
+    },
   })
-  .catch((err) => console.log(err));
+);
+
+const { PORT } = process.env;
+
+connect()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server is listening on port ${PORT}`);
+    });
+  })
+  .catch((err) => console.log("Error connecting to Mongo: ", err));
+
+export default app;

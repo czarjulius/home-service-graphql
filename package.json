@@ -6,8 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "dev": "nodemon server.js",
-    "json:server": "json-server --watch db.json"
+    "dev": "nodemon --exec babel-node --presets=@babel/preset-env -- server.js"
   },
   "repository": {
     "type": "git",
@@ -20,17 +19,22 @@
   },
   "homepage": "https://github.com/czarjulius/home-service-graphql#readme",
   "dependencies": {
-    "axios": "^0.19.2",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-graphql": "^0.11.0",
     "graphql": "^15.3.0",
-    "json-server": "^0.16.1",
-    "lodash": "^4.17.19",
+    "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.6.0",
-    "mongoose": "^5.10.0"
+    "mongoose": "^5.10.0",
+    "validator": "^13.1.1"
   },
   "devDependencies": {
+    "@babel/cli": "^7.10.5",
+    "@babel/core": "^7.11.1",
+    "@babel/node": "^7.10.5",
+    "@babel/preset-env": "^7.11.0",
     "nodemon": "^2.0.4"
   }
 }
