@@ -1,7 +1,7 @@
 const bcrypt = require("bcryptjs");
 const User = require("../models/user");
 const validator = require("validator");
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
 module.exports = {
   createUser: async function ({ userInput }, req) {
@@ -45,6 +45,7 @@ module.exports = {
 
   login: async function ({ email, password }) {
     const user = await User.findOne({ email: email });
+
     if (!user) {
       const error = new Error("User not found.");
       error.code = 401;

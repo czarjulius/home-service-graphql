@@ -24,10 +24,12 @@ type AuthData {
     userId: String!
 }
 type RootQuery {
-    login(email: String!, password: String!): AuthData!
+    test(email: String!, password: String!): AuthData!
 }
 type RootMutation {
     createUser(userInput: UserInputData): User!
+    login(email: String!, password: String!): AuthData!
+
 }
 
 schema {

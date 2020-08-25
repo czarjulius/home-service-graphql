@@ -2,6 +2,7 @@ import express from "express";
 import { graphqlHTTP } from "express-graphql";
 import bodyParser from "body-parser";
 import "dotenv/config";
+const cors = require("cors");
 
 import { connect } from "./models/db";
 import graphqlSchema from "./graphql/schema";
@@ -9,7 +10,7 @@ import graphqlResolver from "./graphql/resolvers";
 
 const app = express();
 app.use(bodyParser.json());
-
+app.use(cors());
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
@@ -29,12 +30,13 @@ app.use(
     schema: graphqlSchema,
     rootValue: graphqlResolver,
     graphiql: true,
-    formatError(err) {
+    customFormatErrorFn(err) {
       if (!err.originalError) {
         return err;
       }
       const data = err.originalError.data;
       const message = err.message || "An error occurred.";
+
       const code = err.originalError.code || 500;
       return { message: message, status: code, data: data };
     },
