@@ -1,7 +1,8 @@
 const bcrypt = require("bcryptjs");
-const User = require("../models/user");
 const validator = require("validator");
 const jwt = require("jsonwebtoken");
+const User = require("../models/user");
+const Service = require("../models/service");
 
 module.exports = {
   createUser: async function ({ userInput }, req) {
@@ -66,5 +67,83 @@ module.exports = {
       { expiresIn: "1h" }
     );
     return { token: token, userId: user._id.toString() };
+  },
+
+  services: async function (args, req) {
+    // if (!req.isAuth) {
+    //   const error = new Error("Not authenticated!");
+    //   error.code = 401;
+    //   throw error;
+    // }
+    const services = await Service.find().sort({ createdAt: -1 });
+    return {
+      services: services.map((service) => {
+        return {
+          ...service._doc,
+          _id: service._id.toString(),
+          createdAt: service.createdAt.toISOString(),
+          updatedAt: service.updatedAt.toISOString(),
+        };
+      }),
+    };
+  },
+  createService: async function ({ serviceInput }, req) {
+    // if (!req.isAuth) {
+    //   const error = new Error("Not authenticated!");
+    //   error.code = 401;
+    //   throw error;
+    // }
+    const errors = [];
+    if (
+      validator.isEmpty(serviceInput.title) ||
+      !validator.isLength(serviceInput.title, { min: 2 })
+    ) {
+      errors.push({ message: "Title is Invalid." });
+    }
+    if (
+      validator.isEmpty(serviceInput.description) ||
+      !validator.isLength(serviceInput.description, { min: 5 })
+    ) {
+      errors.push({ message: "Description is Invalid." });
+    }
+    if (errors.length > 0) {
+      const error = new Error("Invalid input.");
+      error.data = errors;
+      error.code = 422;
+      throw error;
+    }
+    const service = new Service({
+      title: serviceInput.title,
+      description: serviceInput.description,
+      imageUrl: serviceInput.imageUrl,
+    });
+    const createdService = await service.save();
+    return {
+      ...createdService._doc,
+      _id: createdService._id.toString(),
+      createdAt: createdService.createdAt.toISOString(),
+      updatedAt: createdService.updatedAt.toISOString(),
+    };
+  },
+  service: async function ({ id }, req) {
+        // if (!req.isAuth) {
+    //   const error = new Error("Not authenticated!");
+    //   error.code = 401;
+    //   throw error;
+    // }
+
+    const service = await Service.findById(id)
+    if (!service) {
+      const error = new Error("Service Not Found");
+        error.code = 404;
+        throw error;
+    }
+
+    return {
+      ...service._doc,
+      _id: service._id.toString(),
+      createdAt: service.createdAt.toISOString(),
+      updatedAt: service.updatedAt.toISOString(),
+    };
   },
 };
