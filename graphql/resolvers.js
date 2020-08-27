@@ -3,6 +3,7 @@ const validator = require("validator");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const Service = require("../models/service");
+const Vendor = require("../models/vendor");
 
 module.exports = {
   createUser: async function ({ userInput }, req) {
@@ -144,6 +145,54 @@ module.exports = {
       _id: service._id.toString(),
       createdAt: service.createdAt.toISOString(),
       updatedAt: service.updatedAt.toISOString(),
+    };
+  },
+  createVendor: async function ({ vendorInput }, req) {
+    // if (!req.isAuth) {
+    //   const error = new Error("Not authenticated!");
+    //   error.code = 401;
+    //   throw error;
+    // }
+    const errors = [];
+    if (
+      validator.isEmpty(vendorInput.name) ||
+      !validator.isLength(vendorInput.name, { min: 2 })
+    ) {
+      errors.push({ message: "Name is Invalid." });
+    }
+    if (
+      validator.isEmpty(vendorInput.description) ||
+      !validator.isLength(vendorInput.description, { min: 5 })
+    ) {
+      errors.push({ message: "Description is Invalid." });
+    }
+    if (errors.length > 0) {
+      const error = new Error("Invalid input.");
+      error.data = errors;
+      error.code = 422;
+      throw error;
+    }
+    const service = await Service.findById("5f452dd3774f006231321f0a");    
+    if (!service) {
+      const error = new Error('Invalid service.');
+      error.code = 401;
+      throw error;
+    }
+    const vendor = new Vendor({
+      name: vendorInput.name,
+      description: vendorInput.description,
+      isAvalaible: vendorInput.isAvalaible,
+      imageUrl: vendorInput.imageUrl,
+      service
+    });
+    const createdVendor = await vendor.save();
+    service.vendors.push(createdVendor);
+    await service.save();
+    return {
+      ...createdVendor._doc,
+      _id: createdVendor._id.toString(),
+      createdAt: createdVendor.createdAt.toISOString(),
+      updatedAt: createdVendor.updatedAt.toISOString(),
     };
   },
 };

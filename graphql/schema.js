@@ -10,6 +10,26 @@ type User{
       email: String!
       password: String!
 }
+type Service{
+    _id:ID!
+    title:String!
+    imageUrl:String!
+    description:String!
+    createdAt:String!
+    updatedAt:String!
+    vendors: [Vendor!]!
+
+}
+type Vendor{
+    _id:ID!
+    name:String!
+    imageUrl:String!
+    description:String!
+    isAvalaible:Boolean!
+    service: Service!
+    createdAt:String!
+    updatedAt:String!
+}
 input UserInputData{
       firstname: String!
       lastname: String!
@@ -24,18 +44,16 @@ input ServiceInputData{
      imageUrl:String!
      description:String!
 }
-
+input VendorInputData{
+      
+     name:String!
+     imageUrl:String!
+     description:String!
+     isAvalaible:Boolean!
+}
 type AuthData {
     token: String!
     userId: String!
-}
-type Service{
-     _id:ID!
-     title:String!
-     imageUrl:String!
-     description:String!
-     createdAt:String!
-     updatedAt:String!
 }
 type ServiceData{
      services:[Service!]!
@@ -50,7 +68,7 @@ type RootMutation {
     createUser(userInput: UserInputData): User!
     login(email: String!, password: String!): AuthData!
     createService(serviceInput:ServiceInputData):Service!
-
+    createVendor(vendorInput:VendorInputData):Vendor!
 }
 
 schema {
