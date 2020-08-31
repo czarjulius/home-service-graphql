@@ -133,7 +133,7 @@ module.exports = {
     //   throw error;
     // }
 
-    const service = await Service.findById(id)
+    const service = await Service.findById(id).populate('vendors');
     if (!service) {
       const error = new Error("Service Not Found");
         error.code = 404;
