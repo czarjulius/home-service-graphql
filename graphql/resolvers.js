@@ -127,17 +127,17 @@ module.exports = {
     };
   },
   service: async function ({ id }, req) {
-        // if (!req.isAuth) {
+    // if (!req.isAuth) {
     //   const error = new Error("Not authenticated!");
     //   error.code = 401;
     //   throw error;
     // }
 
-    const service = await Service.findById(id).populate('vendors');
+    const service = await Service.findById(id).populate("vendors");
     if (!service) {
       const error = new Error("Service Not Found");
-        error.code = 404;
-        throw error;
+      error.code = 404;
+      throw error;
     }
 
     return {
@@ -172,9 +172,9 @@ module.exports = {
       error.code = 422;
       throw error;
     }
-    const service = await Service.findById("5f452dd3774f006231321f0a");    
+    const service = await Service.findById("5f452dd3774f006231321f0a");
     if (!service) {
-      const error = new Error('Invalid service.');
+      const error = new Error("Invalid service.");
       error.code = 401;
       throw error;
     }
@@ -183,7 +183,7 @@ module.exports = {
       description: vendorInput.description,
       isAvalaible: vendorInput.isAvalaible,
       imageUrl: vendorInput.imageUrl,
-      service
+      service,
     });
     const createdVendor = await vendor.save();
     service.vendors.push(createdVendor);
@@ -193,6 +193,28 @@ module.exports = {
       _id: createdVendor._id.toString(),
       createdAt: createdVendor.createdAt.toISOString(),
       updatedAt: createdVendor.updatedAt.toISOString(),
+    };
+  },
+
+  vendor: async function ({ id }, req) {
+    // if (!req.isAuth) {
+    //   const error = new Error("Not authenticated!");
+    //   error.code = 401;
+    //   throw error;
+    // }
+
+    const vendor = await Vendor.findById(id).populate("service");
+    if (!vendor) {
+      const error = new Error("Vendor Not Found");
+      error.code = 404;
+      throw error;
+    }
+
+    return {
+      ...vendor._doc,
+      _id: vendor._id.toString(),
+      createdAt: vendor.createdAt.toISOString(),
+      updatedAt: vendor.updatedAt.toISOString(),
     };
   },
 };

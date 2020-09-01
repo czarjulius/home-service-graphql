@@ -62,6 +62,7 @@ type ServiceData{
 type RootQuery {
     services:ServiceData!
     service(id:ID!):Service!
+    vendor(id:ID!):Vendor!
 
 }
 type RootMutation {
