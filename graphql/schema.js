@@ -8,7 +8,10 @@ type User{
       address: String!
       phone: String!
       email: String!
+      token: String!
       password: String!
+      createdAt:String!
+      updatedAt:String!
 }
 type Service{
     _id:ID!
@@ -18,7 +21,6 @@ type Service{
     createdAt:String!
     updatedAt:String!
     vendors: [Vendor!]!
-
 }
 type Vendor{
     _id:ID!

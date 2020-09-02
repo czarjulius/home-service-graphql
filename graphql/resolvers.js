@@ -42,7 +42,22 @@ module.exports = {
     });
 
     const createdUser = await user.save();
-    return { ...createdUser._doc, _id: createdUser._id.toString() };
+
+    const token = jwt.sign(
+      {
+        userId: createdUser._id.toString(),
+        email: createdUser.email,
+      },
+      "secretkey",
+      { expiresIn: "1h" }
+    );
+    return {
+      ...createdUser._doc,
+      _id: createdUser._id.toString(),
+      token,
+      createdAt: createdUser.createdAt.toISOString(),
+      updatedAt: createdUser.updatedAt.toISOString(),
+    };
   },
 
   login: async function ({ email, password }) {
