@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const Service = require("../models/service");
 const Vendor = require("../models/vendor");
+import { AuthenticationError } from 'apollo-server-core'
 
 module.exports = {
   createUser: async function ({ userInput }, req) {
@@ -28,8 +29,8 @@ module.exports = {
 
     const existingUser = await User.findOne({ email: userInput.email });
     if (existingUser) {
-      const error = new Error("User exist already!");
-      throw error;
+      throw new AuthenticationError(`User with email ${userInput.email} exist already`)
+
     }
     const hashedPw = await bcrypt.hash(userInput.password, 12);
     const user = new User({
