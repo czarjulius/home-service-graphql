@@ -12,6 +12,8 @@ type User{
       password: String!
       createdAt:String!
       updatedAt:String!
+      orders: [Order!]!
+
 }
 type Service{
     _id:ID!
@@ -29,6 +31,17 @@ type Vendor{
     description:String!
     isAvalaible:Boolean!
     service: Service!
+    createdAt:String!
+    updatedAt:String!
+}
+type Order{
+    _id:ID!
+    address:String!
+    description:String!
+    status:String!
+    date:String!
+    vendor: Vendor!
+    user: User!
     createdAt:String!
     updatedAt:String!
 }
@@ -53,6 +66,11 @@ input VendorInputData{
      description:String!
      isAvalaible:Boolean!
 }
+input OrderInputData{
+     address:String!
+     description:String!
+     date:String!
+    }
 type AuthData {
     token: String!
     userId: String!
@@ -72,6 +90,7 @@ type RootMutation {
     login(email: String!, password: String!): AuthData!
     createService(serviceInput:ServiceInputData):Service!
     createVendor(vendorInput:VendorInputData):Vendor!
+    createOrder(orderInput:OrderInputData):Order!
 }
 
 schema {

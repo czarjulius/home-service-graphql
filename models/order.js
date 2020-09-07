@@ -1,39 +1,35 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const userSchema = new Schema({
-  firstname: {
-    type: String,
-    required: true,
-  },
-  lastname: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-  phone: {
-    type: String,
-    required: true,
-  },
+const orderSchema = new Schema({
   address: {
     type: String,
     required: true,
   },
-  orders: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'Order'
-    }
-  ],
+  description: {
+    type: String,
+    required: true,
+  },
+  status: {
+    type: String,
+    default: "Pending"
+  },
+  date: {
+    type: Date,
+    required: true,
+  },
+  vendor: {
+    type: Schema.Types.ObjectId,
+    ref: "Vendor",
+    required: true,
+  },
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });
 
-module.exports = mongoose.model("User", userSchema);
+module.exports = mongoose.model("Order", orderSchema);

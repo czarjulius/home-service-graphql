@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const Service = require("../models/service");
 const Vendor = require("../models/vendor");
-import { AuthenticationError } from 'apollo-server-core'
+const Order = require("../models/order");
 
 module.exports = {
   createUser: async function ({ userInput }, req) {
@@ -234,6 +234,63 @@ module.exports = {
       _id: vendor._id.toString(),
       createdAt: vendor.createdAt.toISOString(),
       updatedAt: vendor.updatedAt.toISOString(),
+    };
+  },
+
+  createOrder: async function ({ orderInput }, req) {
+    // if (!req.isAuth) {
+    //   const error = new Error("Not authenticated!");
+    //   error.code = 401;
+    //   throw error;
+    // }
+    const errors = [];
+    if (
+      validator.isEmpty(orderInput.address) ||
+      !validator.isLength(orderInput.address, { min: 2 })
+    ) {
+      errors.push({ message: "Address is Invalid." });
+    }
+    if (
+      validator.isEmpty(orderInput.description) ||
+      !validator.isLength(orderInput.description, { min: 5 })
+    ) {
+      errors.push({ message: "Description is Invalid." });
+    }
+    if (errors.length > 0) {
+      const error = new Error("Invalid input.");
+      error.data = errors;
+      error.code = 422;
+      throw error;
+    }
+    const vendor = await Vendor.findById("5f47e847e24b1032f75a117c");
+    if (!vendor) {
+      const error = new Error("Invalid Vendor.");
+      error.code = 401;
+      throw error;
+    }
+    const user = await User.findById("5f3a3363346d1d60e2b4422e");
+    if (!user) {
+      const error = new Error("Invalid User.");
+      error.code = 401;
+      throw error;
+    }
+    const order = new Order({
+      address: orderInput.address,
+      description: orderInput.description,
+      date: orderInput.date,
+      vendor,
+      user,
+    });
+    const createdOrder = await order.save();
+    vendor.orders.push(createdOrder);
+    user.orders.push(createdOrder);
+    await vendor.save();
+    await user.save();
+    return {
+      ...createdOrder._doc,
+      _id: createdOrder._id.toString(),
+      createdAt: createdOrder.createdAt.toISOString(),
+      updatedAt: createdOrder.updatedAt.toISOString(),
     };
   },
 };

@@ -23,6 +23,12 @@ const vendorSchema = new Schema({
     ref: 'Service',
     required: true
   },
+  orders: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Order'
+    }
+  ],
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });
