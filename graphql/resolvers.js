@@ -151,6 +151,9 @@ module.exports = {
     //   error.code = 401;
     //   throw error;
     // }
+    const user = await User.findById(req.userId);
+    console.log(user,'kdkdkdkdddkddddkdkkdkkdkdkdd');
+    
 
     const service = await Service.findById(id).populate("vendors");
     if (!service) {
@@ -166,6 +169,7 @@ module.exports = {
       updatedAt: service.updatedAt.toISOString(),
     };
   },
+
   createVendor: async function ({ vendorInput }, req) {
     // if (!req.isAuth) {
     //   const error = new Error("Not authenticated!");
@@ -262,7 +266,7 @@ module.exports = {
       error.code = 422;
       throw error;
     }
-    const vendor = await Vendor.findById("5f47e847e24b1032f75a117c");
+    const vendor = await Vendor.findById(orderInput.vendorId);
     if (!vendor) {
       const error = new Error("Invalid Vendor.");
       error.code = 401;
@@ -293,4 +297,6 @@ module.exports = {
       updatedAt: createdOrder.updatedAt.toISOString(),
     };
   },
+
+ 
 };

@@ -69,6 +69,7 @@ input VendorInputData{
 input OrderInputData{
      address:String!
      description:String!
+     vendorId:String!
      date:String!
     }
 type AuthData {
@@ -78,10 +79,14 @@ type AuthData {
 type ServiceData{
      services:[Service!]!
 }
+type OrderData{
+     orders:[Order!]!
+}
 
 type RootQuery {
     services:ServiceData!
     service(id:ID!):Service!
+    userOrder(id:ID!):OrderData!
     vendor(id:ID!):Vendor!
 
 }
