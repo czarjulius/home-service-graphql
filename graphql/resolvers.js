@@ -29,11 +29,12 @@ module.exports = {
 
     const existingUser = await User.findOne({ email: userInput.email });
     if (existingUser) {
-      const error = new Error(`User with email ${userInput.email} exist already`);
+      const error = new Error(
+        `User with email ${userInput.email} exist already`
+      );
       error.data = errors;
       error.code = 400;
       throw error;
-
     }
     const hashedPw = await bcrypt.hash(userInput.password, 12);
     const user = new User({
@@ -152,8 +153,7 @@ module.exports = {
     //   throw error;
     // }
     const user = await User.findById(req.userId);
-    console.log(user,'kdkdkdkdddkddddkdkkdkkdkdkdd');
-    
+    console.log(user, "kdkdkdkdddkddddkdkkdkkdkdkdd");
 
     const service = await Service.findById(id).populate("vendors");
     if (!service) {
@@ -298,5 +298,28 @@ module.exports = {
     };
   },
 
- 
+  userOrder: async function ({ id }, req) {
+    // if (!req.isAuth) {
+    //   const error = new Error("Not authenticated!");
+    //   error.code = 401;
+    //   throw error;
+    // }
+    const orders = await Order.find({ user: id }).populate("vendor").sort({ createdAt: -1 });;
+    if (!orders) {
+      const error = new Error("User Not Found");
+      error.code = 404;
+      throw error;
+    }
+    return {
+      orders: orders.map((order) => {
+        return {
+          ...order._doc,
+          _id: order._id.toString(),
+          date: order.date.toISOString(),
+          createdAt: order.createdAt.toISOString(),
+          updatedAt: order.updatedAt.toISOString(),
+        };
+      }),
+    };
+  },
 };
