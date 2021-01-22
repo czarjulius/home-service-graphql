@@ -30,6 +30,7 @@
     "graphql": "^15.3.0",
     "graphql-resolvers": "^0.4.2",
     "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.20",
     "mongodb": "^3.6.0",
     "mongoose": "^5.10.0",
     "validator": "^13.1.1"

@@ -1,4 +1,4 @@
-import bycrpt from 'bcrypt';
+import bycrpt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 class AuthHelper {
