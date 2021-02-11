@@ -83,12 +83,22 @@ type OrderData{
      orders:[Order!]!
 }
 
-type Query {
+type RootQuery {
     services:ServiceData!
+    service(id:ID!):Service!
+    userOrder(id:ID!):OrderData!
+    vendor(id:ID!):Vendor!
 
 }
-type Mutation {
+type RootMutation {
+    createUser(userInput: UserInputData): User!
     login(email: String!, password: String!): AuthData!
+    createService(serviceInput:ServiceInputData):Service!
+    createVendor(vendorInput:VendorInputData):Vendor!
+    createOrder(orderInput:OrderInputData):Order!
 }
+
+query: RootQuery
+mutation: RootMutation
 
 `;
